@@ -30,8 +30,7 @@ public class GlobalExceptionHandler {
 
     }
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiResponse<Map<String, String>>> handleValidationExceptions(
-MethodArgumentNotValidException ex) {
+    public ResponseEntity<ApiResponse<Map<String, String>>> handleValidationExceptions(MethodArgumentNotValidException ex) {
 
         Map<String, String> errors = new HashMap<>();
 
@@ -63,4 +62,67 @@ MethodArgumentNotValidException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(response);
     }
+
+    @ExceptionHandler(DuplicateSupplierException.class)
+    public ResponseEntity<ApiResponse<Void>> handleDuplicateSupplier(
+                DuplicateSupplierException ex){
+
+        ApiResponse<Void> response = ApiResponse.<Void>builder()
+                .success(false)
+                .message(ex.getMessage())
+                .data(null)
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(response);
+    }
+
+    @ExceptionHandler(SupplierNotFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handleSupplierNotFound(
+                SupplierNotFoundException ex) {
+
+        ApiResponse<Void> response = ApiResponse.<Void>builder()
+                .success(false)
+                .message(ex.getMessage())
+                .data(null)
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(response);
+    }
+
+    @ExceptionHandler(ProductNotFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handleProductNotFound(
+        ProductNotFoundException ex) {
+
+    ApiResponse<Void> response = ApiResponse.<Void>builder()
+            .success(false)
+            .message(ex.getMessage())
+            .data(null)
+            .timestamp(LocalDateTime.now())
+            .build();
+
+    return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body(response);
+    }
+    
+    @ExceptionHandler(DuplicateProductException.class)
+    public ResponseEntity<ApiResponse<Void>> handleDuplicateProduct(
+        DuplicateProductException ex) {
+
+    ApiResponse<Void> response = ApiResponse.<Void>builder()
+            .success(false)
+            .message(ex.getMessage())
+            .data(null)
+            .timestamp(LocalDateTime.now())
+            .build();
+
+    return ResponseEntity.status(HttpStatus.CONFLICT)
+            .body(response);
+    }
+
+
+            
 }
