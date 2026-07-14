@@ -112,17 +112,58 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<Void>> handleDuplicateProduct(
         DuplicateProductException ex) {
 
-    ApiResponse<Void> response = ApiResponse.<Void>builder()
-            .success(false)
-            .message(ex.getMessage())
-            .data(null)
-            .timestamp(LocalDateTime.now())
-            .build();
+        ApiResponse<Void> response = ApiResponse.<Void>builder()
+                .success(false)
+                .message(ex.getMessage())
+                .data(null)
+                .timestamp(LocalDateTime.now())
+                .build();
 
-    return ResponseEntity.status(HttpStatus.CONFLICT)
-            .body(response);
-    }
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(response);
+        }
 
+    @ExceptionHandler(PurchaseOrderNotFoundException.class)
+        public ResponseEntity<ApiResponse<Void>> handlePurchaseOrderNotFound(
+                PurchaseOrderNotFoundException ex) {
 
+        ApiResponse<Void> response = ApiResponse.<Void>builder()
+                .success(false)
+                .message(ex.getMessage())
+                .data(null)
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(response);
+        }
+        @ExceptionHandler(UserNotFoundException.class)
+        public ResponseEntity<ApiResponse<Void>> handleUserNotFound(
+                UserNotFoundException ex) {
+
+                ApiResponse<Void> response = ApiResponse.<Void>builder()
+                        .success(false)
+                        .message(ex.getMessage())
+                        .data(null)
+                        .timestamp(LocalDateTime.now())
+                        .build();
+
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(response);
+        }
+        @ExceptionHandler(DuplicateUserException.class)
+        public ResponseEntity<ApiResponse<Void>> handleDuplicateUser(
+                DuplicateUserException ex) {
+
+                ApiResponse<Void> response = ApiResponse.<Void>builder()
+                        .success(false)
+                        .message(ex.getMessage())
+                        .data(null)
+                        .timestamp(LocalDateTime.now())
+                        .build();
+
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                        .body(response);
+        }
             
 }

@@ -18,4 +18,10 @@ public interface ProductService {
 
     void deleteProduct(Long id);
 
+    Page<ProductResponse> searchProducts(String name, Pageable pageable);
+
+    Page<ProductResponse> getProductsByCategory(Long categoryId, Pageable pageable);
+
+    Page<ProductResponse> getProductsBySupplier(Long supplierId, Pageable pageable);
+
 }
