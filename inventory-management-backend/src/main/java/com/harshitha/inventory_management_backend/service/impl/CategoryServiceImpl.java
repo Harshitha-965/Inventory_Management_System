@@ -4,6 +4,7 @@ import com.harshitha.inventory_management_backend.dto.request.CategoryRequest;
 import com.harshitha.inventory_management_backend.dto.response.CategoryResponse;
 import com.harshitha.inventory_management_backend.entity.Category;
 import com.harshitha.inventory_management_backend.exception.CategoryNotFoundException;
+import com.harshitha.inventory_management_backend.exception.DuplicateCategoryException;
 import com.harshitha.inventory_management_backend.repository.CategoryRepository;
 import com.harshitha.inventory_management_backend.service.CategoryService;
 
@@ -21,6 +22,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryResponse createCategory(CategoryRequest request) {
+        if (categoryRepository.existsByName(request.getName())) {
+            throw new DuplicateCategoryException("Category already exists with name : " + request.getName());
+        }
         Category category = Category.builder()
                 .name(request.getName())
                 .description(request.getDescription())
@@ -51,17 +55,56 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<CategoryResponse> getAllCategories() {
-        return null;
+
+        List<Category> categories = categoryRepository.findAll();
+
+        return categories.stream()
+                .map(category -> CategoryResponse.builder()
+                        .id(category.getId())
+                        .name(category.getName())
+                        .description(category.getDescription())
+                        .build())
+                .toList();
     }
 
     @Override
     public CategoryResponse updateCategory(Long id, CategoryRequest request) {
-       return null;
+
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() ->
+                        new CategoryNotFoundException(
+                                "Category not found with id : " + id));
+
+        if (!category.getName().equals(request.getName())
+                && categoryRepository.existsByName(request.getName())) {
+
+            throw new DuplicateCategoryException(
+                    "Category already exists with name : " + request.getName());
+
+        }
+
+        category.setName(request.getName());
+        category.setDescription(request.getDescription());
+
+        Category updatedCategory = categoryRepository.save(category);
+
+        return CategoryResponse.builder()
+                .id(updatedCategory.getId())
+                .name(updatedCategory.getName())
+                .description(updatedCategory.getDescription())
+                .build();
     }
 
     @Override
     public void deleteCategory(Long id) {
-        
+
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() ->
+                        new CategoryNotFoundException(
+                                "Category not found with id : " + id));
+
+        categoryRepository.delete(category);
+
     }
 
 }
